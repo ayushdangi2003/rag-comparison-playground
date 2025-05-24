@@ -1,0 +1,124 @@
+# RAG Comparison Playground
+
+A full-stack application to compare multiple Retrieval-Augmented Generation (RAG) architectures on PDF documents using a FastAPI backend and a Next.js + Tailwind CSS frontend.
+
+## 🚀 Features
+
+* 📄 Upload PDFs and extract embeddings using LangChain + Qdrant
+* 🔍 Compare 3 RAG pipelines:
+
+  * **Simple RAG**
+  * **Self-Query RAG**
+  * **RAG + Reranker** (using Jina AI)
+* 📊 View answers, source chunks, and latency metrics side-by-side
+* 🌐 Frontend built with Next.js App Router and Tailwind CSS
+
+---
+
+## 📁 Project Structure
+
+```
+rag-playground/
+├── backend/                 # FastAPI backend
+│   ├── main.py              # API endpoints
+│   ├── utils/ingest.py      # PDF processing and embedding
+│   ├── rag/
+│   │   ├── simple.py        # Simple RAG
+│   │   ├── selfquery.py     # Self-query RAG
+│   │   └── reranker.py      # Jina RAG
+│   └── Dockerfile (optional)
+│
+├── rag-frontend/           # Frontend
+│   ├── app/
+│   │   ├── page.tsx         # Home page
+│   │   ├── components/CompareView.tsx
+│   │   └── lib/api.ts, upload.ts
+│   └── tailwind.config.ts, etc.
+```
+
+---
+
+## ⚙️ Backend Setup (FastAPI)
+
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+#### Environment Variables
+
+```bash
+# Set both in the same terminal
+$env:OPENAI_API_KEY = "your_groq_or_openai_key"
+$env:OPENAI_API_BASE = "https://api.groq.com/openai/v1"
+$env:JINA_API_KEY = "your_jina_key"
+```
+
+---
+
+## 💻 Frontend Setup (Next.js)
+
+```bash
+cd rag-frontend
+npm install
+npm run dev
+```
+
+Access at: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🔍 API Endpoints
+
+| Endpoint     | Method | Description              |
+| ------------ | ------ | ------------------------ |
+| `/upload`    | POST   | Upload and embed PDF     |
+| `/query`     | POST   | Simple RAG               |
+| `/selfquery` | POST   | Self-querying RAG        |
+| `/rerank`    | POST   | RAG + reranker (Jina AI) |
+
+---
+
+## 📊 Latency Metrics (Frontend)
+
+Each architecture response now includes latency:
+
+```ts
+setResults((prev) => ({
+  ...prev,
+  [id]: { ...res, latency: Date.now() - start }
+}))
+```
+
+And displayed in the UI:
+
+```tsx
+<p className="text-xs text-gray-500">Latency: {results[id]?.latency} ms</p>
+```
+
+---
+
+## 📦 Deployment
+
+* **Frontend**: [Vercel](https://vercel.com/)
+* **Backend**: [Render](https://render.com/), [Railway](https://railway.app/), or Docker + Qdrant
+* ⚠️ Make sure to allow CORS in FastAPI and expose correct ports
+
+---
+
+## 🧠 Credits
+
+* LangChain
+* Groq / OpenAI
+* Jina AI Reranker
+* Tailwind CSS
+* Qdrant
+
+---
+
+## 📜 License
+
+MIT License
