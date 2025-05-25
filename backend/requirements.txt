@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+python-multipart
+langchain
+langchain-community>=0.0.17
+qdrant-client
+openai
+jinja2
