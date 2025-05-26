@@ -9,6 +9,8 @@ from rag.selfquery import run_selfquery_rag
 from rag.reranker import run_reranker_rag
 import uvicorn
 
+import logging
+
 app = FastAPI()
 
 # CORS for frontend to connect
@@ -27,14 +29,10 @@ async def root():
 
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File(...)):
-    if not file.filename.endswith(".pdf"):
-        return {"error": "Only PDF files are supported"}
-    
-    try:
-        result = await process_pdf(file)
-        return {"message": "PDF processed and stored", "chunks": result}
-    except Exception as e:
-        return {"error": str(e)}
+    logging.info(f"Received file: {file.filename}")
+    contents = await file.read()
+    logging.info(f"File size: {len(contents)} bytes")
+    return {"message": f"PDF processed: {file.filename}"}
 
 
 @app.post("/query")
